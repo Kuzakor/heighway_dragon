@@ -1,0 +1,13 @@
+[package]
+name = "heighway_dragon"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+turtle = {git = "https://github.com/sunjay/turtle", rev = "bf64b8333a2be1914378d8a22a4788947711182b"}
+
+
+#[profile.dev.package."*"]
+#opt-level = 3
