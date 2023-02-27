@@ -6,7 +6,6 @@ use std::io;
 use turtle::Turtle;
 
  fn main() {
-
     //Asking user for input
     println!("How many iterations? 1 iteration == 4 lines: ");
     let n = get_int();
@@ -54,7 +53,7 @@ use turtle::Turtle;
     //Setting up turtle
     let mut turtle = Turtle::new();
     turtle.hide();
-    turtle.set_speed(25);
+    turtle.set_speed("instant");
 
     //Drawing
     for i in &vec1{
