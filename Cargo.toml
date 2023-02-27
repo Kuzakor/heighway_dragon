@@ -9,5 +9,8 @@ edition = "2021"
 turtle = {git = "https://github.com/sunjay/turtle"}
 
 
-#[profile.dev.package."*"]
-#opt-level = 3
+[profile.dev.package."*"]
+opt-level = 3
+
+[profile.release.package."*"]
+opt-level = 3
