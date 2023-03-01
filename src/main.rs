@@ -1,56 +1,64 @@
-//Made by Kuzakor 
-
-#![allow(unused)]
+//Made by Kuzakor
 //Imports
 use std::io;
 use turtle::Turtle;
 
+//new type of variable - instruction
+#[derive(Copy, Clone, Debug)]
+enum Instruction {
+    Left,
+    Right,
+    Empty,
+}
+
 fn main() {
     //Asking user for input
-    println!("How many iterations? 1 iteration == 4 lines: ");
-    let n = get_int();
-    println!("Which way? (right-0, left-1): ");
-    let w = get_int();
-    println!("Generating........."); 
+    let n = {
+        println!("How many iterations? 1 iteration == 4 lines: ");
+        get_int()
+    };
 
-    //Generating layout to fill: [102102102102102102102]
-    // 2 - left
-    // 1 - right
-    let mut vec1: Vec<u8> = Vec::new();
-    for _i in 0..n {
-        match w {
+    let which_way = {
+        println!("Which way? (right-0, left-1): ");
+        get_int()
+    };
+
+    //Generating layout to fill: [Right, Empty, Left, Empty ................]
+    println!("Generating.........");
+    let mut layout: Vec<Instruction> = Vec::new();
+    for _ in 0..n {
+        match which_way {
             0 => {
-                vec1.push(1);
-                vec1.push(0);
-                vec1.push(2);
-                vec1.push(0);
+                layout.push(Instruction::Right);
+                layout.push(Instruction::Empty);
+                layout.push(Instruction::Left);
+                layout.push(Instruction::Empty);
             }
             1 => {
-                vec1.push(2);
-                vec1.push(0);
-                vec1.push(1);
-                vec1.push(0);
+                layout.push(Instruction::Left);
+                layout.push(Instruction::Empty);
+                layout.push(Instruction::Right);
+                layout.push(Instruction::Empty);
             }
             _ => {
-                println!("Wrong number");
-                break;
+                panic!("Wrong direction number");
             }
         }
-        
     }
 
-    //Filling layout 
-    for i in 0..vec1.len() / 2  {
+    //Filling layout by replacing Empty with Right or Left by setting the index 2 times bigger to the same value
+    for i in 0..layout.len() / 2 {
         match i {
-                0 => vec1[1] = vec1[i],
-                _ => vec1[i*2+1] = vec1[i],
+            0 => layout[1] = layout[0],
+            _ => layout[i * 2 + 1] = layout[i],
         }
     }
 
     //Asking user for input
-    println!("Enter lenght of a single line: ");
-    let lenght = get_int();
-    println!("Drawing.....");
+    let lenght = {
+        println!("Enter lenght of a single line: ");
+        get_int()
+    };
 
     //Setting up turtle
     let mut turtle = Turtle::new();
@@ -58,21 +66,22 @@ fn main() {
     turtle.set_speed("instant");
 
     //Drawing
-    for i in &vec1{
+    println!("Drawing.....");
+    for i in &layout {
         turtle.forward(lenght as f64);
         match i {
-            1 => turtle.right(90.0),
-            2 => turtle.left(90.0),
-            _ => println!("Error in generating")
+            Instruction::Right => turtle.right(90.0),
+            Instruction::Left => turtle.left(90.0),
+            _ => panic!("Error in generating layout"),
         }
     }
-
+    println!("The dragon is finished!");
 }
 
 //Function getting u32 input form user
-fn get_int() -> u32 {
+fn get_int() -> i32 {
     let mut num = String::new();
     io::stdin().read_line(&mut num).expect("read error");
-    let num:u32 = num.trim().parse().expect("convert error");
-    return num;
+    let num: i32 = num.trim().parse().expect("convert error");
+    num
 }
